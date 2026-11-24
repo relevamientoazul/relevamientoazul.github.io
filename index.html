@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Azul – Mapa de problemas por barrio</title>
+<style>body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;color:#555;font-size:15px;text-align:center;padding:0 16px}</style>
+</head>
+<body>
+<div id="m">Cargando el mapa…</div>
+<script>
+(function () {
+  var EXEC = "https://script.google.com/macros/s/AKfycbyOlTCLvRqS5-oCzRC7uMytduDBaVfJXJ7qY91YK51m3JIrEqnyTi0RAL22FamLqDU/exec";
+  var admin = /[?&]admin=/.test(location.search);
+  function falla() {
+    document.getElementById("m").innerHTML = 'No se pudo cargar el mapa.<br><br><a href="" onclick="location.reload();return false">Reintentar</a>';
+  }
+  fetch(EXEC + "?api=pagina" + (admin ? "&admin=1" : ""), { credentials: "omit", cache: "no-store" })
+    .then(function (r) { return r.json(); })
+    .then(function (r) {
+      if (!r || !r.html) return falla();
+      document.open(); document.write(r.html); document.close();
+      document.title = admin ? "Azul – Administración del mapa" : "Azul – Mapa de problemas por barrio";
+    })
+    .catch(falla);
+})();
+</script>
+</body>
+</html>
